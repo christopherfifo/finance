@@ -1,0 +1,38 @@
+deu esse erro na rota de pessoa 
+
+
+Server Error
+
+TypeError: __webpack_modules__[moduleId] is not a function
+This error happened while generating the page. Any console logs will be displayed in the terminal window.
+Call Stack
+Next.js
+Object.__webpack_require__ [as require]
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/.next/server/webpack-runtime.js (33:42)
+require
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (40:20064)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:108376)
+ea
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:108583)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:110813)
+Object._fromJSON
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:111370)
+JSON.parse
+<anonymous>
+Next.js
+ec
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:109078)
+eo
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:108123)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:115291)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:115308)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:115341)
+<unknown>
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:115358)
+t
+file:/C:/Users/christopherfifo/Desktop/essa%20porra/node_modules/next/dist/compiled/next-server/app-page.runtime.dev.js (35:115581)

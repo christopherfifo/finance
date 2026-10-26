@@ -1,0 +1,215 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum TipoLancamento {
+  DESPESA
+  RECEITA
+}
+
+enum StatusPagamento {
+  PENDENTE
+  PAGO
+}
+
+enum TipoDivida {
+  A_RECEBER
+  A_PAGAR
+}
+
+enum StatusDivida {
+  PENDENTE
+  PAGO_PARCIAL
+  QUITADA
+}
+
+enum Periodicidade {
+  MENSAL
+  ANUAL
+  SEMANAL
+}
+
+model Pessoa {
+  id          String        @id @default(cuid())
+  nome        String
+  relacao     String?       // "Eu", "Pai", "Mãe", "Irmã", etc.
+  isUser      Boolean       @default(false)
+  telefone    String?
+  cor         String?       // Cor hexadecimal para badges e avatares
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lancamentos Lancamento[]
+  dividas     Divida[]      @relation("DividaPessoa")
+  pagamentos  PagamentoDivida[]
+  contasFixas ContaFixa[]
+
+  @@map("pessoas")
+}
+
+model CartaoCredito {
+  id              String        @id @default(cuid())
+  nome            String
+  ultimosDigitos  String?
+  titular         String
+  diaFechamento   Int
+  diaVencimento   Int
+  limite          Float?
+  bandeira        String?       // visa, mastercard, elo, amex, etc.
+  cor             String?       // Classes Tailwind ou gradiente
+  banco           String?       // Nubank, Itaú, XP, Inter, etc.
+  ativo           Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  lancamentos     Lancamento[]
+  contasFixas     ContaFixa[]
+
+  @@map("cartoes_credito")
+}
+
+model Categoria {
+  id          String        @id @default(cuid())
+  nome        String        @unique
+  icone       String?
+  cor         String?
+  createdAt   DateTime      @default(now())
+
+  lancamentos Lancamento[]
+  contasFixas ContaFixa[]
+
+  @@map("categorias")
+}
+
+model Lancamento {
+  id              String           @id @default(cuid())
+  descricao       String
+  valor           Float
+  data            DateTime
+  mesReferencia   String           // "YYYY-MM"
+  tipo            TipoLancamento   @default(DESPESA)
+  status          StatusPagamento  @default(PENDENTE)
+  observacoes     String?
+
+  // Parcelamento
+  isParcelado     Boolean          @default(false)
+  parcelaAtual    Int?             @default(1)
+  totalParcelas   Int?             @default(1)
+  compraId        String?
+
+  categoriaId     String?
+  categoria       Categoria?       @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
+
+  cartaoId        String?
+  cartao          CartaoCredito?   @relation(fields: [cartaoId], references: [id], onDelete: SetNull)
+
+  pessoaId        String
+  pessoa          Pessoa           @relation(fields: [pessoaId], references: [id], onDelete: Cascade)
+
+  dividaId        String?
+  divida          Divida?          @relation(fields: [dividaId], references: [id], onDelete: SetNull)
+
+  contaFixaOrigemId String?        // ID da ContaFixa que gerou este lançamento automaticamente
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([mesReferencia])
+  @@index([pessoaId])
+  @@index([cartaoId])
+  @@index([categoriaId])
+  @@index([contaFixaOrigemId])
+  @@map("lancamentos")
+}
+
+model Divida {
+  id              String          @id @default(cuid())
+  descricao       String
+  valorTotal      Float
+  valorPago       Float           @default(0)
+  tipo            TipoDivida      // A_RECEBER ou A_PAGAR
+  status          StatusDivida    @default(PENDENTE)
+  origem          String?         // "Cartão de Crédito", "Empréstimo", etc.
+  dataVencimento  DateTime?
+  observacoes     String?
+
+  pessoaId        String
+  pessoa          Pessoa          @relation("DividaPessoa", fields: [pessoaId], references: [id], onDelete: Cascade)
+
+  pagamentos      PagamentoDivida[]
+  lancamentos     Lancamento[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([pessoaId])
+  @@map("dividas")
+}
+
+model PagamentoDivida {
+  id          String       @id @default(cuid())
+  valor       Float
+  data        DateTime     @default(now())
+  observacao  String?
+
+  dividaId    String
+  divida      Divida       @relation(fields: [dividaId], references: [id], onDelete: Cascade)
+
+  pessoaId    String?
+  pessoa      Pessoa?      @relation(fields: [pessoaId], references: [id], onDelete: SetNull)
+
+  createdAt   DateTime     @default(now())
+
+  @@map("pagamentos_divida")
+}
+
+model ContaFixa {
+  id             String        @id @default(cuid())
+  descricao      String
+  valorPadrao    Float
+  diaVencimento  Int           // Dia de vencimento (1 a 31)
+  diaDesconto    Int?          // Dia em que debita/desconta no cartão ou conta (1 a 31)
+  mesInicio      String?       // "YYYY-MM" (Mês que começa a conta fixa)
+  mesFim         String?       // "YYYY-MM" (Mês que encerra, opcional)
+  formaPagamento String?       @default("CARTAO_CREDITO") // CARTAO_CREDITO, BOLETO, PIX, DEBITO_AUTOMATICO
+  periodicidade  Periodicidade @default(MENSAL)
+  ativo          Boolean       @default(true)
+  observacoes    String?
+
+  categoriaId    String?
+  categoria      Categoria?    @relation(fields: [categoriaId], references: [id], onDelete: SetNull)
+
+  cartaoId       String?
+  cartao         CartaoCredito? @relation(fields: [cartaoId], references: [id], onDelete: SetNull)
+
+  pessoaId       String?
+  pessoa         Pessoa?       @relation(fields: [pessoaId], references: [id], onDelete: SetNull)
+
+  pagamentos     PagamentoContaFixa[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@map("contas_fixas")
+}
+
+model PagamentoContaFixa {
+  id            String          @id @default(cuid())
+  mesReferencia String          // "YYYY-MM"
+  valorPago     Float
+  dataPagamento DateTime        @default(now())
+  status        StatusPagamento @default(PAGO)
+
+  contaFixaId   String
+  contaFixa     ContaFixa       @relation(fields: [contaFixaId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime        @default(now())
+
+  @@unique([contaFixaId, mesReferencia])
+  @@map("pagamentos_contas_fixas")
+}
