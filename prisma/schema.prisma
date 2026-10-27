@@ -118,6 +118,7 @@ model Lancamento {
 
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  incluirGastosPrevistos Boolean @default(true) // new field: include in invoice if true
 
   @@index([mesReferencia])
   @@index([pessoaId])

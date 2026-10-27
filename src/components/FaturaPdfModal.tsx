@@ -26,6 +26,7 @@ interface Props {
 
 export function FaturaPdfModal({ isOpen, onClose, card, month, initialPessoaId }: Props) {
   const [selectedPessoaId, setSelectedPessoaId] = useState<string>(initialPessoaId || 'TOTAL');
+  const [includePrevistos, setIncludePrevistos] = useState<boolean>(true);
 
   if (!card) return null;
 

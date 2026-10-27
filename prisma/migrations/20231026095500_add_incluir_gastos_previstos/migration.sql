@@ -1,0 +1,1 @@
+ALTER TABLE "lancamentos" ADD COLUMN "incluirGastosPrevistos" BOOLEAN NOT NULL DEFAULT true;

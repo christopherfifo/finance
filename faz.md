@@ -1,88 +1,31 @@
-Crie um sistema web de controle financeiro pessoal e familiar utilizando **Next.js, Prisma ORM e PostgreSQL**.
+Corrija as funcionalidades de orçamento, faturas e gastos previstos existentes no projeto, mantendo a arquitetura e os padrões atuais.
 
-O objetivo é centralizar o controle de cartões de crédito, contas fixas, dívidas e valores que outras pessoas devem, permitindo visualizar facilmente quanto cada pessoa deve e como os gastos estão distribuídos.
+### 1. Academia e gastos previstos
+- A academia não está sendo incluída na fatura mesmo quando está desmarcada. Corrija essa lógica.
+- Adicione a opção de incluir ou não os gastos previstos na emissão da fatura, conforme solicitado anteriormente.
+- Quando um gasto previsto for efetivamente lançado na fatura, ele deve deixar de ser considerado previsto e passar a ser tratado como gasto normal, evitando duplicidade.
 
-### Funcionalidades
+### 2. Remover a lógica de início e fim do mês
+Remova a lógica de início e fim do mês utilizada para determinar a inclusão dos gastos.
 
-**1. Cartões de crédito**
-- Cadastrar cartões com nome, últimos dígitos, titular, dia de fechamento e dia de vencimento.
-- Identificar facilmente a origem de cada cartão.
-- Visualizar as despesas vinculadas a cada cartão.
-- Exibir o total da fatura e o valor correspondente a cada pessoa.
-- Consultar faturas atuais e anteriores.
+A referência deve ser a data de vencimento da conta fixa. Se o gasto estiver incluído na fatura correspondente, deve deixar de ser tratado como previsto.
 
-**2. Lançamentos financeiros**
-- Registrar despesas com descrição, valor, data, categoria e cartão associado, quando aplicável.
-- Permitir compras parceladas, informando o número total de parcelas e as parcelas restantes.
-- Registrar pagamentos, recebimentos e outros lançamentos financeiros.
-- Associar cada despesa a uma pessoa, como pai, mãe, irmã ou outras pessoas cadastradas.
-- Permitir adicionar observações aos lançamentos.
+### 3. Compras parceladas
+Compras parceladas devem aparecer em todos os meses correspondentes às suas parcelas.
 
-**3. Controle de dívidas**
-- Registrar valores que outras pessoas devem a mim, incluindo dívidas relacionadas a compras no cartão de crédito.
-- Registrar dívidas que tenho com outras pessoas.
-- Identificar quem deve, quanto deve, a origem da dívida e os valores já pagos e pendentes.
-- Permitir registrar pagamentos parciais até a quitação da dívida.
+Exemplo: uma compra em 6 parcelas deve refletir as parcelas nos respectivos 6 meses, com valores e numeração corretos, sem duplicar os gastos nos orçamentos.
 
-**4. Contas fixas**
-- Cadastrar despesas recorrentes, como internet, energia, água, assinaturas e outras contas.
-- Definir descrição, valor, vencimento, categoria e periodicidade.
-- Identificar contas pagas e pendentes.
-- Organizar as contas por mês e visualizar os próximos vencimentos.
+### 4. Referência mensal
+Ao cadastrar uma conta ou fatura, deve ser possível informar a qual mês ela pertence. Essa referência deve determinar em qual orçamento mensal o lançamento será exibido.
 
-**5. Pessoas e divisão de despesas**
-- Cadastrar pessoas e utilizar seus nomes para identificar despesas e dívidas.
-- Visualizar quanto cada pessoa gastou em cada cartão.
-- Calcular quanto cada pessoa deve pagar, considerando suas despesas, parcelas e pagamentos já realizados.
-- Diferenciar os valores que cada pessoa deve a mim dos valores que devo a ela.
+### 5. Contas fixas recorrentes
+Contas fixas sem data de término devem ser refletidas automaticamente nos orçamentos dos meses seguintes enquanto estiverem ativas, sem exigir novos cadastros mensais.
 
-**6. Dashboard financeiro**
-Criar uma página inicial com um resumo financeiro contendo:
-- Total das faturas atuais dos cartões.
-- Total que cada pessoa deve em cada cartão.
-- Total das minhas despesas pessoais.
-- Total de valores a receber e a pagar.
-- Total de contas fixas pendentes.
-- Próximos vencimentos de cartões e contas.
-- Resumo dos gastos por categoria e por pessoa.
+Se houver uma data de término, respeite-a.
 
-**7. Filtros e consultas**
-Permitir filtrar os lançamentos por:
-- Cartão de crédito.
-- Pessoa.
-- Categoria.
-- Período ou mês de referência.
-- Tipo de lançamento.
-- Status de pagamento.
-- Despesas parceladas ou à vista.
+### 6. Prisma e banco de dados
+Analise o schema atual e faça as alterações necessárias para suportar essas regras.
 
-Apresentar os resultados em tabelas organizadas, com totais calculados conforme os filtros selecionados.
+**Se houver alterações no schema do Prisma, crie e execute uma migration para aplicá-las ao banco de dados.** Gere novamente o Prisma Client, se necessário, e atualize as consultas e operações afetadas.
 
-### Interface
-
-Desenvolva uma interface moderna, limpa, intuitiva e responsiva, priorizando a facilidade de uso e a visualização das informações financeiras.
-
-Organize o sistema em páginas ou seções para:
-- Dashboard.
-- Cartões.
-- Lançamentos.
-- Pessoas.
-- Dívidas.
-- Contas fixas.
-- Histórico financeiro.
-
-Utilize componentes reutilizáveis, formulários objetivos, tabelas com filtros e indicadores visuais para valores pagos, pendentes, a pagar e a receber.
-
-### Tecnologias e estrutura
-
-- **Next.js** para a aplicação web.
-- **TypeScript** para tipagem.
-- **Prisma ORM** para acesso ao banco de dados.
-- **PostgreSQL** como banco de dados.
-- Utilize uma estrutura organizada, com responsabilidades bem separadas e componentes reutilizáveis.
-
-Modele o banco de dados de acordo com as funcionalidades, relacionando cartões, lançamentos, pessoas, dívidas, parcelas, pagamentos e contas fixas.
-
-O sistema deve ser funcional e integrado ao banco de dados, mantendo os cálculos financeiros consistentes e as informações organizadas por mês de referência.
-
-O foco é um sistema pessoal e familiar, sem funcionalidades empresariais desnecessárias.
+Preserve os dados existentes e evite alterações destrutivas desnecessárias.
