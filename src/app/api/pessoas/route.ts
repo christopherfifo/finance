@@ -8,6 +8,8 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const month = searchParams.get('month') || getCurrentMonthRef();
+const includePrevistosParam = searchParams.get('includePrevistos');
+const includePrevistos = includePrevistosParam === null ? true : includePrevistosParam === 'true';
 
     const [pessoas, cartoes] = await Promise.all([
       prisma.pessoa.findMany({

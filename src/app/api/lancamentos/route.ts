@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const month = searchParams.get('month');
+    const includePrevistosParam = searchParams.get('includePrevistos');
+    const includePrevistos = includePrevistosParam === null ? true : includePrevistosParam === 'true';
     const cartaoId = searchParams.get('cartaoId');
     const pessoaId = searchParams.get('pessoaId');
     const categoriaId = searchParams.get('categoriaId');
@@ -156,6 +158,7 @@ export async function POST(req: NextRequest) {
           categoriaId: categoriaId || null,
           cartaoId: cartaoId || null,
           pessoaId,
+          incluirGastosPrevistos: true,
         });
       }
 

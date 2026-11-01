@@ -1,31 +1,43 @@
-Corrija as funcionalidades de orçamento, faturas e gastos previstos existentes no projeto, mantendo a arquitetura e os padrões atuais.
+### 8. Execução obrigatória e continuidade entre IAs
 
-### 1. Academia e gastos previstos
-- A academia não está sendo incluída na fatura mesmo quando está desmarcada. Corrija essa lógica.
-- Adicione a opção de incluir ou não os gastos previstos na emissão da fatura, conforme solicitado anteriormente.
-- Quando um gasto previsto for efetivamente lançado na fatura, ele deve deixar de ser considerado previsto e passar a ser tratado como gasto normal, evitando duplicidade.
+**Não fique apenas analisando, planejando ou explicando o que precisa ser feito. Execute as alterações no código.** Trabalhe em etapas curtas para evitar consumir os tokens sem entregar resultados.
 
-### 2. Remover a lógica de início e fim do mês
-Remova a lógica de início e fim do mês utilizada para determinar a inclusão dos gastos.
+1. Faça uma análise inicial objetiva do projeto e comece a implementar. Não perca tempo com análises extensas, relatórios desnecessários ou perguntas que possam ser resolvidas consultando o próprio código.
+2. Divida o trabalho em etapas funcionais e implemente cada uma antes de passar à próxima. Priorize as regras de negócio, o banco de dados, as APIs e, depois, as interfaces.
+3. Não considere uma tarefa concluída apenas por ter criado um plano, explicado a solução ou iniciado a edição de arquivos. Implemente e verifique as alterações realizadas.
+4. Evite reescrever arquivos inteiros quando alterações pontuais forem suficientes. Não faça refatorações desnecessárias nem altere funcionalidades fora do escopo.
+5. **Se perceber que os tokens estão acabando, interrompa o trabalho atual de forma organizada e prepare imediatamente a continuidade para outra IA.** Não espere acabar o contexto para registrar o progresso.
 
-A referência deve ser a data de vencimento da conta fixa. Se o gasto estiver incluído na fatura correspondente, deve deixar de ser tratado como previsto.
+#### Arquivo obrigatório de continuidade
 
-### 3. Compras parceladas
-Compras parceladas devem aparecer em todos os meses correspondentes às suas parcelas.
+Crie e mantenha o arquivo `CONTINUACAO_IA.md` na raiz do projeto, atualizando-o após cada etapa concluída.
 
-Exemplo: uma compra em 6 parcelas deve refletir as parcelas nos respectivos 6 meses, com valores e numeração corretos, sem duplicar os gastos nos orçamentos.
+Ele deve registrar:
+- Objetivo das alterações.
+- Como o sistema funciona atualmente e quais regras de negócio foram identificadas.
+- Arquivos modificados e criados, com seus respectivos caminhos.
+- Funcionalidades concluídas e o que realmente foi implementado.
+- Funcionalidades pendentes, indicando exatamente o que falta fazer.
+- Problemas encontrados, erros conhecidos e decisões técnicas tomadas.
+- Migrations criadas e situação do banco de dados.
+- Próxima ação exata que outra IA deve executar.
+- Comandos necessários para continuar o desenvolvimento.
 
-### 4. Referência mensal
-Ao cadastrar uma conta ou fatura, deve ser possível informar a qual mês ela pertence. Essa referência deve determinar em qual orçamento mensal o lançamento será exibido.
+Não registre uma funcionalidade como concluída se ela estiver apenas planejada ou parcialmente implementada.
 
-### 5. Contas fixas recorrentes
-Contas fixas sem data de término devem ser refletidas automaticamente nos orçamentos dos meses seguintes enquanto estiverem ativas, sem exigir novos cadastros mensais.
+#### Regras para evitar perda de progresso
 
-Se houver uma data de término, respeite-a.
+- Trabalhe diretamente no projeto existente.
+- Preserve as alterações já realizadas e não sobrescreva trabalho anterior sem necessidade.
+- Ao concluir cada etapa, atualize o arquivo de continuidade antes de iniciar a próxima.
+- Não pare após criar o arquivo de continuidade. Ele serve para registrar o progresso, não para substituir a implementação.
+- Não finalize a execução voluntariamente enquanto ainda houver tempo e contexto suficientes para implementar a próxima etapa.
+- Se precisar interromper, deixe o projeto em um estado consistente e informe o que falta.
 
-### 6. Prisma e banco de dados
-Analise o schema atual e faça as alterações necessárias para suportar essas regras.
+#### Instrução final
 
-**Se houver alterações no schema do Prisma, crie e execute uma migration para aplicá-las ao banco de dados.** Gere novamente o Prisma Client, se necessário, e atualize as consultas e operações afetadas.
+Comece analisando apenas o necessário para identificar a estrutura do projeto e implemente a primeira etapa imediatamente.
 
-Preserve os dados existentes e evite alterações destrutivas desnecessárias.
+**Priorize código funcional em vez de explicações.** Se não conseguir concluir tudo nesta execução, deixe as alterações realizadas preservadas e o `CONTINUACAO_IA.md` atualizado, permitindo que outra IA continue sem precisar refazer a análise inicial.
+
+Ao finalizar, informe objetivamente o que foi implementado, o que falta e qual deve ser a próxima ação.
